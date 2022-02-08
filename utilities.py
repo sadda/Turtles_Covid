@@ -15,7 +15,7 @@ def generate_data():
 
 
 def generate_slider():
-    return widgets.IntSlider(value=5, min=1, max=10, step=1)
+    return widgets.IntSlider(value=5, min=1, max=20, step=1)
 
 
 def aggregate(x, step):
