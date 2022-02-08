@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import ipywidgets as widgets
 
@@ -35,6 +36,7 @@ def plot(x1, x2, n_aggr, return_fig=True):
     c2 = x1_aggr / x2_aggr * np.exp(-k * (1/x1_aggr + 1/x2_aggr))
 
     fig = plt.figure(facecolor=(1, 1, 1))
+    ax = fig.add_subplot(111)
     plt.plot(t_aggr, c0)
     plt.plot(t_aggr, c1, color="grey", alpha=0.3)
     plt.plot(t_aggr, c2, color="grey", alpha=0.3)
@@ -43,6 +45,17 @@ def plot(x1, x2, n_aggr, return_fig=True):
     plt.xlim(1, len(x1))    
     plt.ylim(0, 3)
     plt.title('Aggregation days = ' + str(n_aggr))
+
+    months = [1, 32, 62, 93, 124, 154]
+    ax.set_xticks(months)
+    ax.set_xticklabels(['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'])
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=90) 
+
+    dx = 0.4; dy = 0.
+    offset = matplotlib.transforms.ScaledTranslation(dx, dy, fig.dpi_scale_trans)
+
+    for label in ax.xaxis.get_majorticklabels():
+        label.set_transform(label.get_transform() + offset)
 
     if return_fig:
         return fig
