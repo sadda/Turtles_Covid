@@ -9,9 +9,12 @@ def generate_data():
     t = np.linspace(0, np.pi, n)
     x1 = 0.5*np.sin(t) + 0.5*np.random.rand(n)
     x2 = np.sin(t) + 0.5*np.random.rand(n)
-    slider = widgets.IntSlider(value=5, min=1, max=10, step=1)
+    
+    return t, x1, x2
 
-    return t, x1, x2, slider
+
+def generate_slider():
+    return widgets.IntSlider(value=5, min=1, max=10, step=1)
 
 
 def aggregate(x, step):
@@ -22,7 +25,7 @@ def aggregate(x, step):
     return x_aggr, t_aggr
 
 
-def plot(x1, x2, n_aggr):
+def plot(x1, x2, n_aggr, return_fig=True):
     x1_aggr, t_aggr = aggregate(x1, n_aggr)
     x2_aggr, _ = aggregate(x2, n_aggr)
 
@@ -31,6 +34,7 @@ def plot(x1, x2, n_aggr):
     c1 = x1_aggr / x2_aggr * np.exp(k * (1/x1_aggr + 1/x2_aggr))
     c2 = x1_aggr / x2_aggr * np.exp(-k * (1/x1_aggr + 1/x2_aggr))
 
+    fig = plt.figure(facecolor=(1, 1, 1))
     plt.plot(t_aggr, c0)
     plt.plot(t_aggr, c1, color="grey", alpha=0.3)
     plt.plot(t_aggr, c2, color="grey", alpha=0.3)
@@ -38,4 +42,18 @@ def plot(x1, x2, n_aggr):
 
     plt.xlim(1, len(x1))    
     plt.ylim(0, 3)
+    plt.title('Aggregation days = ' + str(n_aggr))
+
+    if return_fig:
+        return fig
+
+
+def fig_to_matrix(fig):
+    fig.canvas.draw()       # draw the canvas, cache the renderer
+    image = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
+    image = image.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+
+    return image
+
+
 
