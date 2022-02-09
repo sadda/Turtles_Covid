@@ -26,7 +26,7 @@ def aggregate(x, step):
     return x_aggr, t_aggr
 
 
-def compute_confidence(x1, x2, k=1.96, c_max=10, p_ratio=1):
+def compute_confidence(x1, x2, k=1.96, c_max=10, p_ratio=1, **kwargs):
     c0 = np.zeros(len(x1))
     c1 = np.zeros(len(x1))
     c2 = np.zeros(len(x1))
@@ -79,31 +79,47 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, place=None, **kwargs)
     years = data.year.values
     c0, c1, c2, t = prepare_data(entries, years, year1, year2, n_aggr, instagram, **kwargs)
     
-    return plot_confidence0(c0, c1, c2, t, n_aggr, return_fig=False, **kwargs)
+    return_fig = kwargs.pop('return_fig', False)
+    title = kwargs.pop('title', 'Aggregation days = ' + str(n_aggr))
+    xmax = kwargs.pop('xmax', len(entries[years==year1]))
+    ymax = kwargs.pop('ymax', 3)
+    xticks_offset = kwargs.pop('xticks_offset', 0.4)
+    return plot_confidence0(c0, c1, c2, t,
+        return_fig=return_fig,
+        title=title,
+        xmax=xmax,
+        ymax=ymax,
+        xticks_offset=xticks_offset,
+        **kwargs,
+        )
 
 
-def plot_confidence0(c0, c1, c2, t, n_aggr, return_fig=True, **kwargs):
+def plot_confidence0(c0, c1, c2, t, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
     plt.plot(t, c0)
     plt.plot(t, c1, color="grey", alpha=0.3)
     plt.plot(t, c2, color="grey", alpha=0.3)
-    plt.fill_between(t, c1, c2, color="grey", alpha=0.3)
+    plt.fill_between(t, c1, c2, color="grey", alpha=0.3)    
 
-    plt.xlim(1, len(c0))    
-    plt.ylim(0, 3)
-    plt.title('Aggregation days = ' + str(n_aggr))
+    if xmax is None:
+        xmax = len(t)        
+    if ymax is not None:
+        plt.ylim(0, ymax)
+    plt.xlim(1, xmax)
+    plt.title(title)
 
+    plt.hlines(1, 1, xmax, linestyles='dotted')
+    
     months = [1, 32, 62, 93, 124, 154]
     ax.set_xticks(months)
     ax.set_xticklabels(['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'])
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=90) 
 
-    dx = 0.4; dy = 0.
-    offset = matplotlib.transforms.ScaledTranslation(dx, dy, fig.dpi_scale_trans)
-
-    for label in ax.xaxis.get_majorticklabels():
-        label.set_transform(label.get_transform() + offset)
+    if xticks_offset != 0:
+        offset = matplotlib.transforms.ScaledTranslation(xticks_offset, 00, fig.dpi_scale_trans)
+        for label in ax.xaxis.get_majorticklabels():
+            label.set_transform(label.get_transform() + offset)
 
     if return_fig:
         return fig
