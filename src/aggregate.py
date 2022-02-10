@@ -2,12 +2,15 @@ import numpy as np
 
 class Aggregate:
     month_lengths = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
+    month_names = np.array(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
     month_end = np.cumsum(month_lengths)
     month_start = np.hstack((0, month_end[:-1]))
 
     def __init__(self, month1, month2, step, ignore_month=True, ignore_shorter=True, **kwargs):
         assert month1 < month2 and month1 >= 1 and month2 <= 12
-
+        if month1 <= 2:
+            raise(Exception('Cannot work with February due to leap years'))
+            
         self.month1 = month1
         self.month2 = month2
         
