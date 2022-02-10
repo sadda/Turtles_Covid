@@ -6,7 +6,7 @@ from aggregate import *
 
 
 def generate_slider():
-    return widgets.IntSlider(value=5, min=1, max=10, step=1)
+    return widgets.IntSlider(value=5, min=1, max=20, step=1)
 
 
 def compute_confidence(x1, x2, k=1.96, c_max=10, p_ratio=1, **kwargs):
