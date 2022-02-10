@@ -53,7 +53,7 @@ def prepare_data(entries, years, year1, year2, n_aggr, instagram=None, **kwargs)
     return c0, c1, c2, t
 
 
-def plot_confidence(data, year1, year2, n_aggr, instagram, place=None, **kwargs):
+def get_entries(data, place=None, **kwargs):
     if place is None:
         entries = data.total.values
     elif place == "boat":
@@ -63,6 +63,11 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, place=None, **kwargs)
     else:
         raise(Exception('place should be None, boat or underwater'))
     years = data.year.values
+    return entries, years
+
+
+def plot_confidence(data, year1, year2, n_aggr, instagram, **kwargs):
+    entries, years = get_entries(data, **kwargs)
     c0, c1, c2, t = prepare_data(entries, years, year1, year2, n_aggr, instagram, **kwargs)
 
     return_fig = kwargs.pop('return_fig', False)
