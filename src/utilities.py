@@ -2,18 +2,11 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import ipywidgets as widgets
+from aggregate import *
 
 
 def generate_slider():
-    return widgets.IntSlider(value=5, min=1, max=20, step=1)
-
-
-def aggregate(x, step):
-    t = np.arange(0, len(x), step)
-    x_aggr = np.array([np.sum(x[t[i]:t[i+1]]) for i in range(len(t)-1)])
-    t_aggr = t[:-1] + (t[1] - t[0])/2
-
-    return x_aggr, t_aggr
+    return widgets.IntSlider(value=5, min=1, max=10, step=1)
 
 
 def compute_confidence(x1, x2, k=1.96, c_max=10, p_ratio=1, **kwargs):
@@ -44,8 +37,9 @@ def prepare_data(entries, years, year1, year2, n_aggr, instagram=None, **kwargs)
     x1 = entries[years == year1]
     x2 = entries[years == year2]
 
-    x1, t = aggregate(x1, n_aggr)
-    x2, _ = aggregate(x2, n_aggr)
+    aggregate = Aggregate(5, 10, n_aggr, **kwargs)
+    x1 = aggregate.split(x1)
+    x2 = aggregate.split(x2)
 
     if not instagram is None:
         p1 = instagram.users.values[instagram.year == year1][0]
@@ -53,6 +47,8 @@ def prepare_data(entries, years, year1, year2, n_aggr, instagram=None, **kwargs)
         c0, c1, c2 = compute_confidence(x1, x2, p_ratio=p1/p2, **kwargs)
     else:
         c0, c1, c2 = compute_confidence(x1, x2, p_ratio=1, **kwargs)
+
+    t, (c0, c1, c2) = aggregate.convert_to_plot((c0, c1, c2), **kwargs)
 
     return c0, c1, c2, t
 
@@ -68,7 +64,7 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, place=None, **kwargs)
         raise(Exception('place should be None, boat or underwater'))
     years = data.year.values
     c0, c1, c2, t = prepare_data(entries, years, year1, year2, n_aggr, instagram, **kwargs)
-    
+
     return_fig = kwargs.pop('return_fig', False)
     title = kwargs.pop('title', 'Aggregation days = ' + str(n_aggr))
     xmax = kwargs.pop('xmax', len(entries[years==year1]))
@@ -110,7 +106,7 @@ def plot_confidence0(c0, c1, c2, t, return_fig=True, title=None, xmax=None, ymax
         offset = matplotlib.transforms.ScaledTranslation(xticks_offset, 00, fig.dpi_scale_trans)
         for label in ax.xaxis.get_majorticklabels():
             label.set_transform(label.get_transform() + offset)
-
+    
     if return_fig:
         return fig
 

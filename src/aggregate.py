@@ -5,7 +5,7 @@ class Aggregate:
     month_end = np.cumsum(month_lengths)
     month_start = np.hstack((0, month_end[:-1]))
 
-    def __init__(self, month1, month2, step, ignore_month=True, ignore_shorter=True):
+    def __init__(self, month1, month2, step, ignore_month=True, ignore_shorter=True, **kwargs):
         assert month1 < month2 and month1 >= 1 and month2 <= 12
 
         self.month1 = month1
@@ -47,16 +47,23 @@ class Aggregate:
             return res
 
 
-    def convert_to_plot(self, x, box_shape=False):
-        assert len(x) == len(self.i_start)
+    def convert_to_plot(self, xs, box_shape=False, **kwargs):
+        if type(xs) is list:
+            raise(Exception('xs must be a list'))
 
         if box_shape:
             # TODO only works for ignore_shorter=True
             i1 = np.hstack((self.i_start[0], alternate(self.i_start[1:]+0.5, self.i_start[1:]+0.5), self.i_end[-1]-1))
-            i2 = alternate(x, x)
         else:
             i1 = 0.5*(self.i_start + self.i_end)
-            i2 = x
+
+        i2 = []
+        for x in xs:
+            if box_shape:
+                i2.append(alternate(x, x))
+            else:
+                i2.append(x)
+
         return i1, i2
 
 
