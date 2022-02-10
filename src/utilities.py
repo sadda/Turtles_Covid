@@ -4,16 +4,6 @@ import matplotlib.pyplot as plt
 import ipywidgets as widgets
 
 
-def generate_data():
-    np.random.seed(666)
-    n = 184
-    t = np.linspace(0, np.pi, n)
-    x1 = 0.5*np.sin(t) + 0.5*np.random.rand(n)
-    x2 = np.sin(t) + 0.5*np.random.rand(n)
-    
-    return t, x1, x2
-
-
 def generate_slider():
     return widgets.IntSlider(value=5, min=1, max=20, step=1)
 
