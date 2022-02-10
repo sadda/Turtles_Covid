@@ -33,11 +33,11 @@ def compute_confidence(x1, x2, k=1.96, c_max=10, p_ratio=1, **kwargs):
     return c0, c1, c2
 
 
-def prepare_data(entries, years, year1, year2, n_aggr, instagram=None, **kwargs):
-    x1 = entries[years == year1]
-    x2 = entries[years == year2]
+def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, instagram=None, **kwargs):
+    x1 = entries[(years == year1) * (months >= month1) * (months <= month2)]
+    x2 = entries[(years == year2) * (months >= month1) * (months <= month2)]
 
-    aggregate = Aggregate(5, 10, n_aggr, **kwargs)
+    aggregate = Aggregate(month1, month2, n_aggr, **kwargs)
     x1 = aggregate.split(x1)
     x2 = aggregate.split(x2)
 
@@ -63,12 +63,13 @@ def get_entries(data, place=None, **kwargs):
     else:
         raise(Exception('place should be None, boat or underwater'))
     years = data.year.values
-    return entries, years
+    months = data.month.values
+    return entries, years, months
 
 
 def plot_confidence(data, year1, year2, n_aggr, instagram, **kwargs):
-    entries, years = get_entries(data, **kwargs)
-    c0, c1, c2, t = prepare_data(entries, years, year1, year2, n_aggr, instagram, **kwargs)
+    entries, years, months = get_entries(data, **kwargs)
+    c0, c1, c2, t = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, instagram, **kwargs)
 
     return_fig = kwargs.pop('return_fig', False)
     title = kwargs.pop('title', 'Aggregation days = ' + str(n_aggr))
@@ -125,12 +126,12 @@ def fig_to_matrix(fig):
 
 
 def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_max=10, **kwargs):
-    entries, years = get_entries(data, **kwargs)
+    entries, years, months = get_entries(data, **kwargs)
             
     res = []
     for n_aggr in range(1, n_aggr_max+1):
-        _, c1, c2, _ = prepare_data(entries, years, year1, year2, n_aggr, instagram, ignore_month=False, **kwargs)
-        aggregate = Aggregate(5, 10, n_aggr, ignore_month=False, **kwargs)
+        _, c1, c2, _ = prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, instagram, ignore_month=False, **kwargs)
+        aggregate = Aggregate(month1, month2, n_aggr, ignore_month=False, **kwargs)
 
         res_month = []
         for month in range(month1, month2+1):
