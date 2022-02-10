@@ -124,4 +124,27 @@ def fig_to_matrix(fig):
     return image
 
 
+def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_max=10, **kwargs):
+    entries, years = get_entries(data, **kwargs)
+            
+    res = []
+    for n_aggr in range(1, n_aggr_max+1):
+        _, c1, c2, _ = prepare_data(entries, years, year1, year2, n_aggr, instagram, ignore_month=False, **kwargs)
+        aggregate = Aggregate(5, 10, n_aggr, ignore_month=False, **kwargs)
+
+        res_month = []
+        for month in range(month1, month2+1):
+            with np.errstate(divide='ignore'):
+                qwe = np.sqrt(c2 / c1)
+            asd = qwe[aggregate.months == month]
+            asd[asd == np.inf] = rat_max
+            res_month.append(np.mean(asd))
+        res.append(res_month)
+
+    plot_sd0(range(1, n_aggr_max+1), np.array(res), legend=Aggregate.month_names[range(month1, month2+1)])
+
+
+def plot_sd0(t, res, legend=None):
+    plt.plot(t, res)
+    plt.legend(legend)
 
