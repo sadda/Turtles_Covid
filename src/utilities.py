@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import ipywidgets as widgets
+from scipy.stats import norm
 from aggregate import *
 
 
@@ -9,7 +10,8 @@ def generate_slider():
     return widgets.IntSlider(value=5, min=1, max=20, step=1)
 
 
-def compute_confidence(x1, x2, k=1.96, c_max=10, p_ratio=1, **kwargs):
+def compute_confidence(x1, x2, alpha=0.05, c_max=10, p_ratio=1, **kwargs):
+    k = norm.ppf(1-alpha/2)
     c0 = np.zeros(len(x1))
     c1 = np.zeros(len(x1))
     c2 = np.zeros(len(x1))
@@ -147,5 +149,8 @@ def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_
 
 def plot_sd0(t, res, legend=None):
     plt.plot(t, res)
+    plt.xlabel('Aggregation days')
+    plt.ylabel('Confidence interval size')
     plt.legend(legend)
+
 
