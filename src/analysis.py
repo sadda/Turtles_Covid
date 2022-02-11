@@ -132,12 +132,27 @@ def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_
             res_month.append(np.mean(asd))
         res.append(res_month)
 
-    plot_sd0(range(1, n_aggr_max+1), np.array(res), legend=Aggregate.month_names[range(month1, month2+1)])
+    legend = kwargs.pop('legend', Aggregate.month_names[range(month1, month2+1)])
+    return plot_sd0(range(1, n_aggr_max+1), np.array(res), legend=legend, **kwargs)
 
 
-def plot_sd0(t, res, legend=None):
+def plot_sd0(t, res, ymax=None, legend=None, title=None, return_fig=False, **kwargs):
+    fig = plt.figure(facecolor=(1, 1, 1))
     plt.plot(t, res)
+    xmin = np.min(t)-1
+    xmax = np.max(t)+1
+    plt.hlines(1, xmin, xmax, linestyles='dotted')
+    plt.xlim(xmin, xmax)
+    if ymax is not None:
+        plt.ylim(0.9, ymax)
+    else:
+        plt.ylim(bottom=0.9)
+    
     plt.xlabel('Aggregation days')
     plt.ylabel('Confidence interval size')
     plt.legend(legend)
+    plt.title(title)
+    
+    if return_fig:        
+        return fig
 
