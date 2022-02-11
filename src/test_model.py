@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.stats import nbinom
-from utilities import *
+from analysis import compute_confidence
 
 def generate1(v1, v2, p1, p2, alpha=0.05, n=10000):
     u1 = nbinom.rvs(v1, p1, size=n)
