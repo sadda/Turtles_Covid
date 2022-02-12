@@ -145,7 +145,7 @@ def plot_k(v1s, v2s, p1, p2, **kwargs):
     return plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, **kwargs)
 
 
-def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, xscale=None, return_fig=False, **kwargs):
+def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, ymin=None, ymax=None, xscale=None, return_fig=False, title=None, **kwargs):
     fig = plt.figure(facecolor=(1, 1, 1))
     plot_between(v1s, lb1, ub1, color='blue', alpha=0.2)
     plot_between(v1s, lb2, ub2, color='red', alpha=0.2)
@@ -153,11 +153,16 @@ def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, xscale=None, return_fig=False, **kw
     plt.plot(v1s, m2, color='black', linestyle='dotted')    
 
     plt.legend(('Point estimate ours', 'Point estimate true', 'Confidence interval ours', 'Confidence interval true'))
-    plt.xlabel('V_1')
-    plt.ylabel('V_1')
+    plt.xlabel('Detected viewing pressure')
+    plt.ylabel('Ratio of real viewing pressures')
+    plt.title(title)
 
     if xscale == 'log':
         plt.xscale("log")
+    if ymin is not None:
+        plt.ylim(bottom=ymin)
+    if ymax is not None:
+        plt.ylim(top=ymax)    
 
     if return_fig:        
         return fig
