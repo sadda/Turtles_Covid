@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from aggregate import Aggregate
-from test_model import confidence_ours, confidence_true, compute_confidence
+from confidence import confidence_ours, confidence_true, compute_confidence
 
 
 def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, instagram=None, **kwargs):
