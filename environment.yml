@@ -2,6 +2,7 @@ name: turtles_covid
 channels:
   - defaults
 dependencies:
+  - imageio
   - ipywidgets
   - matplotlib
   - numpy
