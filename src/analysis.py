@@ -1,33 +1,8 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from scipy.stats import norm
 from aggregate import Aggregate
-
-
-def compute_confidence(x1, x2, alpha=0.05, c_max=10, p_ratio=1, **kwargs):
-    k = norm.ppf(1-alpha/2)
-    c0 = np.zeros(len(x1))
-    c1 = np.zeros(len(x1))
-    c2 = np.zeros(len(x1))
-    for (i, (x1_i, x2_i)) in enumerate(zip(x1, x2)):
-        if x1_i == 0 or x2_i == 0:
-            if x1_i == 0 and x2_i == 0:
-                c0_i = np.nan
-            elif x1_i == 0:
-                c0_i = c_max
-            else:
-                c0_i = 0
-            c1_i = 0
-            c2_i = c_max
-        else:            
-            c0_i = x2_i / x1_i / p_ratio
-            c1_i = x2_i / x1_i / p_ratio * np.exp(-k * np.sqrt(1/x1_i + 1/x2_i))
-            c2_i = x2_i / x1_i / p_ratio * np.exp(k * np.sqrt(1/x1_i + 1/x2_i))
-        c0[i] = c0_i
-        c1[i] = c1_i
-        c2[i] = c2_i
-    return c0, c1, c2
+from test_model import confidence_ours, confidence_true, compute_confidence
 
 
 def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, instagram=None, **kwargs):
@@ -151,6 +126,39 @@ def plot_sd0(t, res, ymax=None, legend=None, title=None, return_fig=False, **kwa
     plt.legend(legend)
     plt.title(title)
     
+    if return_fig:        
+        return fig
+
+
+def plot_k(v1s, v2s, p1, p2, **kwargs):
+    m1 = np.zeros(len(v1s))
+    m2 = np.zeros(len(v1s))
+    lb1 = np.zeros(len(v1s))
+    lb2 = np.zeros(len(v1s))
+    ub1 = np.zeros(len(v1s))
+    ub2 = np.zeros(len(v1s))
+    
+    for (i, (v1, v2)) in enumerate(zip(v1s, v2s)):        
+        m1[i], lb1[i], ub1[i] = confidence_ours(v1, v2, p1, p2)
+        m2[i], lb2[i], ub2[i] = confidence_true(v1, v2, p1, p2)
+
+    return plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, **kwargs)
+
+
+def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, xscale=None, return_fig=False, **kwargs):
+    fig = plt.figure(facecolor=(1, 1, 1))
+    plot_between(v1s, lb1, ub1, color='blue', alpha=0.2)
+    plot_between(v1s, lb2, ub2, color='red', alpha=0.2)
+    plt.plot(v1s, m1, color='black')
+    plt.plot(v1s, m2, color='black', linestyle='dotted')    
+
+    plt.legend(('Point estimate ours', 'Point estimate true', 'Confidence interval ours', 'Confidence interval true'))
+    plt.xlabel('V_1')
+    plt.ylabel('V_1')
+
+    if xscale == 'log':
+        plt.xscale("log")
+
     if return_fig:        
         return fig
 
