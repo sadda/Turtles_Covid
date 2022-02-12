@@ -87,9 +87,7 @@ def plot_confidence0(c0, c1, c2, t, return_fig=True, title=None, xmax=None, ymax
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
     plt.plot(t, c0)
-    plt.plot(t, c1, color="grey", alpha=0.3)
-    plt.plot(t, c2, color="grey", alpha=0.3)
-    plt.fill_between(t, c1, c2, color="grey", alpha=0.3)    
+    plot_between(t, c1, c2, color="grey", alpha=0.2)
 
     if xmax is None:
         xmax = len(t)        
@@ -156,3 +154,8 @@ def plot_sd0(t, res, ymax=None, legend=None, title=None, return_fig=False, **kwa
     if return_fig:        
         return fig
 
+
+def plot_between(x, y1, y2, **kwargs):
+    plt.plot(x, y1, label='_nolegend_', **kwargs)
+    plt.plot(x, y2, label='_nolegend_', **kwargs)
+    plt.fill_between(x, y1, y2, **kwargs)
