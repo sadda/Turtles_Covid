@@ -32,6 +32,6 @@ create_gif(fun, np.round(np.arange(0.01, 0.11, 0.01),2), file_name)
 
 v1s = np.power(10, np.linspace(1,4,100))
 
-fun = lambda rat: plot_k(v1s, v1s*rat, 1e-4, 1e-4, ymin=0, ymax = 2, xscale='log', title='Ratio of detected viewing pressures = ' + str(rat))
+fun = lambda rat: plot_k(v1s, v1s*rat, 1e-4, 1e-4, ymin=0, ymax = 2, xscale='log', title='Ratio of detected viewing pressures = ' + str(rat), return_fig=True)
 file_name = os.path.join('figures', 'confidence.gif')
 create_gif(fun, np.round(np.arange(0.1, 1.1, 0.1),1), file_name)
