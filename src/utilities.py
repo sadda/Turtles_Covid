@@ -3,8 +3,17 @@ import ipywidgets as widgets
 import imageio
 
 
-def generate_slider():
-    return widgets.IntSlider(value=5, min=1, max=20, step=1)
+def generate_slider(mode='float', **kwargs):
+    if mode == 'float':
+        return widgets.FloatSlider(**kwargs)
+    elif mode == 'int':
+        return widgets.IntSlider(**kwargs)
+    else:
+        raise(Exception('Slider mode should be float or int'))   
+
+
+def generate_slider_int(**kwargs):
+    return widgets.FloatSlider(**kwargs)
 
 
 def fig_to_matrix(fig):
