@@ -6,4 +6,4 @@ dependencies:
   - matplotlib
   - numpy
   - pandas
-  - scipy.stats
+  - scipy
