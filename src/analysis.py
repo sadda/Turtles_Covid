@@ -12,10 +12,9 @@ def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, i
     aggregate = Aggregate(month1, month2, n_aggr, **kwargs)
     x1 = aggregate.split(x1)
     x2 = aggregate.split(x2)
-
     if not instagram is None:
         p1 = instagram.users.values[instagram.year == year1][0]
-        p2 = instagram.users.values[instagram.year == year1][0]
+        p2 = instagram.users.values[instagram.year == year2][0]
         c0, c1, c2 = compute_confidence(x1, x2, p_ratio=p1/p2, **kwargs)
     else:
         c0, c1, c2 = compute_confidence(x1, x2, p_ratio=1, **kwargs)
