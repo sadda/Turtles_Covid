@@ -20,7 +20,7 @@ def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, i
         c0, c1, c2 = compute_confidence(x1, x2, p_ratio=1, **kwargs)
 
     t, (c0, c1, c2) = aggregate.convert_to_plot((c0, c1, c2), **kwargs)
-
+    
     return c0, c1, c2, t
 
 
@@ -33,25 +33,30 @@ def get_entries(data, place=None, **kwargs):
         entries = data.underwater.values
     else:
         raise(Exception('place should be None, boat or underwater'))
+    arrivals = data.arr_total.values
     years = data.year.values
     months = data.month.values
-    return entries, years, months
+    return entries, arrivals, years, months
 
 
-def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, **kwargs):
-    entries, years, months = get_entries(data, **kwargs)
+def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, plot_arr=False, **kwargs):
+    entries, arrivals, years, months = get_entries(data, **kwargs)
     c0, c1, c2, t = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, instagram, **kwargs)
     if plot_raw and instagram is not None:
         c0_raw, _, _, _ = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, None, **kwargs)
     else:
         c0_raw = None
+    if plot_arr:
+        c3, _, _, _ = prepare_data(arrivals, years, year1, year2, months, min(months), max(months), n_aggr, None, **kwargs)
+    else:
+        c3 = None
 
     return_fig = kwargs.pop('return_fig', False)
     title = kwargs.pop('title', 'Aggregation days = ' + str(n_aggr))
     xmax = kwargs.pop('xmax', len(entries[years==year1]))
     ymax = kwargs.pop('ymax', 3)
     xticks_offset = kwargs.pop('xticks_offset', 0.4)
-    return plot_confidence0(c0, c1, c2, t, c0_raw,
+    return plot_confidence0(c0, c1, c2, t, c0_raw, c3,
         return_fig=return_fig,
         title=title,
         xmax=xmax,
@@ -61,13 +66,15 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, **kwa
         )
 
 
-def plot_confidence0(c0, c1, c2, t, c0_raw=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
+def plot_confidence0(c0, c1, c2, t, c0_raw=None, c3=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
     plt.plot(t, c0)
     plot_between(t, c1, c2, color="grey", alpha=0.2)
     if c0_raw is not None:
         plt.plot(t, c0_raw)
+    if c3 is not None:
+        plt.plot(t, c3)
 
     if xmax is None:
         xmax = len(t)        
