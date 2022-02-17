@@ -38,16 +38,20 @@ def get_entries(data, place=None, **kwargs):
     return entries, years, months
 
 
-def plot_confidence(data, year1, year2, n_aggr, instagram, **kwargs):
+def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, **kwargs):
     entries, years, months = get_entries(data, **kwargs)
     c0, c1, c2, t = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, instagram, **kwargs)
+    if plot_raw and instagram is not None:
+        c0_raw, _, _, _ = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, None, **kwargs)
+    else:
+        c0_raw = None
 
     return_fig = kwargs.pop('return_fig', False)
     title = kwargs.pop('title', 'Aggregation days = ' + str(n_aggr))
     xmax = kwargs.pop('xmax', len(entries[years==year1]))
     ymax = kwargs.pop('ymax', 3)
     xticks_offset = kwargs.pop('xticks_offset', 0.4)
-    return plot_confidence0(c0, c1, c2, t,
+    return plot_confidence0(c0, c1, c2, t, c0_raw,
         return_fig=return_fig,
         title=title,
         xmax=xmax,
@@ -57,11 +61,13 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, **kwargs):
         )
 
 
-def plot_confidence0(c0, c1, c2, t, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
+def plot_confidence0(c0, c1, c2, t, c0_raw=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
     plt.plot(t, c0)
     plot_between(t, c1, c2, color="grey", alpha=0.2)
+    if c0_raw is not None:
+        plt.plot(t, c0_raw)
 
     if xmax is None:
         xmax = len(t)        

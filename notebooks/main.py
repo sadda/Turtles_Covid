@@ -15,8 +15,9 @@ year2 = 2020
 place = None
 ignore_shorter = True
 box_shape = True
+plot_raw = True
 
-fun = lambda i: plot_confidence(data, year1, year2, i, instagram, place=place, return_fig=True, ignore_shorter=ignore_shorter, box_shape=box_shape)
+fun = lambda i: plot_confidence(data, year1, year2, i, instagram, place=place, return_fig=True, ignore_shorter=ignore_shorter, box_shape=box_shape, plot_raw=plot_raw)
 file_name = os.path.join('figures', 'aggr.gif')
 create_gif(fun, range(1,20), file_name)
 
