@@ -69,19 +69,20 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, plot_
 def plot_confidence0(c0, c1, c2, t, c0_raw=None, c3=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
-    plt.plot(t, c0)
+    plt.plot(t, c0, label='Ratio entries after Instagram')
     plot_between(t, c1, c2, color="grey", alpha=0.2)
     if c0_raw is not None:
-        plt.plot(t, c0_raw)
+        plt.plot(t, c0_raw, label='Ratio enties raw')
     if c3 is not None:
-        plt.plot(t, c3)
-
+        plt.plot(t, c3, label='Ratio arrivals')
+    
     if xmax is None:
         xmax = len(t)        
     if ymax is not None:
         plt.ylim(0, ymax)
     plt.xlim(1, xmax)
     plt.title(title)
+    plt.legend(loc='upper right')
 
     plt.hlines(1, 1, xmax, linestyles='dotted')
     
