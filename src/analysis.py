@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -47,16 +48,18 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, plot_
     else:
         c0_raw = None
     if plot_arr:
-        c3, _, _, _ = prepare_data(arrivals, years, year1, year2, months, min(months), max(months), n_aggr, None, **kwargs)
+        kwargs2 = copy.deepcopy(kwargs)
+        kwargs2.update({'box_shape': False})
+        c3, _, _, t3 = prepare_data(arrivals, years, year1, year2, months, min(months), max(months), 1, None, **kwargs2)
     else:
-        c3 = None
+        c3, t3 = None, None
 
     return_fig = kwargs.pop('return_fig', False)
     title = kwargs.pop('title', 'Aggregation days = ' + str(n_aggr))
     xmax = kwargs.pop('xmax', len(entries[years==year1]))
     ymax = kwargs.pop('ymax', 3)
     xticks_offset = kwargs.pop('xticks_offset', 0.4)
-    return plot_confidence0(c0, c1, c2, t, c0_raw, c3,
+    return plot_confidence0(t, c0, c1, c2, c0_raw, t3, c3,
         return_fig=return_fig,
         title=title,
         xmax=xmax,
@@ -66,7 +69,7 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, plot_
         )
 
 
-def plot_confidence0(c0, c1, c2, t, c0_raw=None, c3=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
+def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
     plt.plot(t, c0, label='Ratio entries after Instagram')
@@ -74,7 +77,7 @@ def plot_confidence0(c0, c1, c2, t, c0_raw=None, c3=None, return_fig=True, title
     if c0_raw is not None:
         plt.plot(t, c0_raw, label='Ratio enties raw')
     if c3 is not None:
-        plt.plot(t, c3, label='Ratio arrivals')
+        plt.plot(t3, c3, color='black', linestyle='dashed', label='Ratio arrivals')
     
     if xmax is None:
         xmax = len(t)        
