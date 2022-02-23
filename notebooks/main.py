@@ -4,7 +4,8 @@ sys.path.insert(0, 'src')
 import os
 import pandas
 import numpy as np
-from analysis import plot_confidence, plot_sd, plot_k
+import matplotlib.pyplot as plt
+from analysis import plot_confidence, plot_sd, plot_k, plot_reliability
 from utilities import create_gif
 
 data = pandas.read_csv(os.path.join('data', 'aggregated1.csv'))
@@ -46,6 +47,12 @@ fun = lambda v2: plot_k(v1s, v2*np.ones(v1s.shape), 1e-4, 1e-4, ymin=0, ymax = 2
 file_name = os.path.join('figures', 'confidence2.gif')
 create_gif(fun, np.arange(1, 11, 1), file_name)
 
+
+
+v1s = np.arange(1, 51, 1)
+v2s = np.arange(1, 51, 1)
+plot_reliability(v1s, v2s, 1e-4, 1e-4, title='IoU of confidence intervals')
+plt.savefig(os.path.join('figures', 'reliability.png'))
 
 
 '''
