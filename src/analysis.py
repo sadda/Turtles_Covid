@@ -105,7 +105,7 @@ def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=Tr
 
 
 def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_max=10, **kwargs):
-    entries, years, months = get_entries(data, **kwargs)
+    entries, _, years, months = get_entries(data, **kwargs)
             
     res = []
     for n_aggr in range(1, n_aggr_max+1):
