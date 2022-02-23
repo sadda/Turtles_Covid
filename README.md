@@ -20,4 +20,4 @@ The following animation complements the previous one. We fix the size of the agg
 
 Our results use two sets of assumptions. The first set relates to the derivation of the model, while the second set relates to the computation of the confidence interval. The following animation shows that the second set of assumptions is correct. We fixed several parameters and compared the true confidence interval with our result. The animation shows that there is a very good overlay for almost all parameters. 
 
-![](figures/confidence.gif)
+![](figures/confidence1.gif)

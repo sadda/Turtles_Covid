@@ -169,8 +169,8 @@ def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, ymin=None, ymax=None, xscale=None, 
     plt.plot(v1s, m2, color='black', linestyle='dotted')    
 
     plt.legend(('Point estimate ours', 'Point estimate true', 'Confidence interval ours', 'Confidence interval true'))
-    plt.xlabel('Detected viewing pressure')
-    plt.ylabel('Ratio of real viewing pressures')
+    plt.xlabel('DETECTED viewing pressure v1')
+    plt.ylabel('Ratio of REAL viewing pressures v2/v1')
     plt.title(title)
 
     if xscale == 'log':
