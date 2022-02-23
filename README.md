@@ -18,6 +18,12 @@ The following animation complements the previous one. We fix the size of the agg
 
 
 
-Our results use two sets of assumptions. The first set relates to the derivation of the model, while the second set relates to the computation of the confidence interval. The following animation shows that the second set of assumptions is correct. We fixed several parameters and compared the true confidence interval with our result. The animation shows that there is a very good overlay for almost all parameters. 
+Our results use two sets of assumptions. The first set relates to the derivation of the model, while the second set relates to the computation of the confidence interval. The following animation shows that the second set of assumptions is correct. We fixed several parameters and compared the true confidence interval with our results when the detected viewing pressure ranges from 10 to 1000. The animation shows that there is a very good overlay for almost all parameters. 
 
 ![](figures/confidence1.gif)
+
+
+
+One of the drawbacks of our method is the situation when the detected viewing pressure is low. The next animation shows how the confidence intervals behaves when we vary the detected viewing pressure v1 between 1 and 1000. Each frame fixes the other detected viewing pressure v2 between 1 and 10. We see that the results are satisfactory whenever one of the detected viewing pressures is at least 10.
+
+![](figures/confidence2.gif)
