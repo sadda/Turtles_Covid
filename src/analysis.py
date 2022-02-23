@@ -185,12 +185,12 @@ def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, ymin=None, ymax=None, xscale=None, 
         return fig
 
 
-def plot_reliability(v1s, v2s, p1, p2, **kwargs):
+def plot_reliability(v1s, v2s, p1, p2, n=100000, **kwargs):
     m = np.zeros((len(v1s), len(v2s)))
     for (i, v1) in enumerate(v1s):
         for (j, v2) in enumerate(v2s):
             _, lb1, ub1 = confidence_ours(v1, v2, p1, p2)
-            _, lb2, ub2 = confidence_true(v1, v2, p1, p2)
+            _, lb2, ub2 = confidence_true(v1, v2, p1, p2, n=n)
             m[i,j] = IoU(lb1, ub1, lb2, ub2)
     plot_reliability0(m, v1s, v2s, **kwargs)
 
