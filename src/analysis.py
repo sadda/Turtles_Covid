@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from aggregate import Aggregate
 from confidence import confidence_ours, confidence_true, compute_confidence
+from utilities import IoU
 
 
 def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, instagram=None, **kwargs):
@@ -179,6 +180,28 @@ def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, ymin=None, ymax=None, xscale=None, 
         plt.ylim(bottom=ymin)
     if ymax is not None:
         plt.ylim(top=ymax)    
+
+    if return_fig:        
+        return fig
+
+
+def plot_reliability(v1s, v2s, p1, p2, **kwargs):
+    m = np.zeros((len(v1s), len(v2s)))
+    for (i, v1) in enumerate(v1s):
+        for (j, v2) in enumerate(v2s):
+            _, lb1, ub1 = confidence_ours(v1, v2, p1, p2)
+            _, lb2, ub2 = confidence_true(v1, v2, p1, p2)
+            m[i,j] = IoU(lb1, ub1, lb2, ub2)
+    plot_reliability0(m, v1s, v2s, **kwargs)
+
+
+def plot_reliability0(m, v1s, v2s, return_fig=False, title=None, **kwargs):
+    fig = plt.figure(facecolor=(1, 1, 1))
+    plt.imshow(np.flipud(m), cmap=plt.cm.RdBu, extent=(min(v1s), max(v1s), min(v2s), max(v2s)))
+    plt.colorbar(boundaries=np.linspace(0,1,11)) 
+    plt.xlabel('v1')
+    plt.ylabel('v2')
+    plt.title(title)
 
     if return_fig:        
         return fig
