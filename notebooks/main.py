@@ -5,6 +5,7 @@ import os
 import pandas
 import numpy as np
 import matplotlib.pyplot as plt
+import tikzplotlib
 from analysis import plot_confidence, plot_sd, plot_k, compute_ious, plot_reliability0, plot_reliability1
 from utilities import create_gif
 
@@ -52,11 +53,15 @@ create_gif(fun, np.arange(1, 11, 1), file_name)
 v1s = np.arange(1, 51, 1)
 v2s = np.arange(1, 51, 1)
 m = compute_ious(v1s, v2s, 1e-4, 1e-4, n=1000000)
-plot_reliability0(m, v1s, v2s, title='IoU of confidence intervals')
+plot_reliability0(m, v1s, v2s, title='IoU of confidence intervals', xlabel='$\mathrm{v}_{\mathrm{detected}}^{\mathrm{year}_1}$', ylabel='$\mathrm{v}_{\mathrm{detected}}^{\mathrm{year}_2}$')
+tikzplotlib.save(os.path.join('figures', 'reliability1.tex'))
 plt.savefig(os.path.join('figures', 'reliability1.png'), bbox_inches='tight')
 plot_reliability1(m, v1s, v2s)
 plt.savefig(os.path.join('figures', 'reliability2.png'), bbox_inches='tight')
 
+dict = {'v1': v1s, 'IoU': [np.min(m[i:,i:]) for i in range(len(v1s))]}
+df = pandas.DataFrame(dict)
+df.to_csv(os.path.join('figures', 'reliability2.csv'), index=False)
 
 
 '''
