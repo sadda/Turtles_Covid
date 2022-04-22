@@ -5,7 +5,7 @@ import os
 import pandas
 import numpy as np
 import matplotlib.pyplot as plt
-from analysis import plot_confidence, plot_sd, plot_k, plot_reliability
+from analysis import plot_confidence, plot_sd, plot_k, compute_ious, plot_reliability0, plot_reliability1
 from utilities import create_gif
 
 data = pandas.read_csv(os.path.join('data', 'aggregated1.csv'))
@@ -51,8 +51,12 @@ create_gif(fun, np.arange(1, 11, 1), file_name)
 
 v1s = np.arange(1, 51, 1)
 v2s = np.arange(1, 51, 1)
-plot_reliability(v1s, v2s, 1e-4, 1e-4, title='IoU of confidence intervals')
-plt.savefig(os.path.join('figures', 'reliability.png'))
+m = compute_ious(v1s, v2s, 1e-4, 1e-4, n=1000000)
+plot_reliability0(m, v1s, v2s, title='IoU of confidence intervals')
+plt.savefig(os.path.join('figures', 'reliability1.png'), bbox_inches='tight')
+plot_reliability1(m, v1s, v2s)
+plt.savefig(os.path.join('figures', 'reliability2.png'), bbox_inches='tight')
+
 
 
 '''

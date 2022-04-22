@@ -32,4 +32,4 @@ One of the drawbacks of our method is the situation when the detected viewing pr
 
 To quantify what "large" means, we plot the intersection over union (IoU) between the true and our confidence intervals. IoU is a standard machine learning metric which computes how the intervals and overlapped, one means a perfect overlap while zero means no overlap. The following graph shows how IoU changes for different values of v1 and v2. We see that we obtain good saisfactory results whenever both of these values are larger at least five. 
 
-![](figures/reliability.png)
+![](figures/reliability1.png)
