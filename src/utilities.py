@@ -37,3 +37,15 @@ def IoU(lb1, ub1, lb2, ub2):
         inter = 0
     union = ub1-lb1 + ub2-lb2 - inter
     return inter/union
+
+
+def PoU(lb1, ub1, lb2, ub2):
+    if lb1 <= lb2 and lb2 <= ub1:
+        inter = min(ub1, ub2) - lb2
+    elif lb2 <= lb1 and lb1 <= ub2:
+        inter = min(ub1, ub2) - lb1
+    else:
+        inter = 0
+    union = ub1-lb1 + ub2-lb2 - inter
+    pred = ub1-lb1
+    return pred/union
