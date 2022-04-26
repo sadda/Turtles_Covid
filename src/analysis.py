@@ -104,8 +104,7 @@ def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=Tr
         return fig
 
 
-
-def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_max=10, **kwargs):
+def compute_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_max=10, **kwargs):
     entries, _, years, months = get_entries(data, **kwargs)
             
     res = []
@@ -121,6 +120,11 @@ def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, rat_
             asd[asd == np.inf] = rat_max
             res_month.append(np.mean(asd))
         res.append(res_month)
+
+    return res
+
+def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, **kwargs):
+    res = compute_sd(data, year1, year2, n_aggr_max, instagram, month1=month1, month2=month2, **kwargs)
 
     legend = kwargs.pop('legend', Aggregate.month_names[range(month1, month2+1)])
     return plot_sd0(range(1, n_aggr_max+1), np.array(res), legend=legend, **kwargs)

@@ -6,7 +6,7 @@ import pandas
 import numpy as np
 import matplotlib.pyplot as plt
 import tikzplotlib
-from analysis import plot_confidence, plot_sd, plot_k, compute_ious, plot_reliability0, plot_reliability1
+from analysis import plot_confidence, compute_sd, plot_sd, plot_k, compute_ious, plot_reliability0, plot_reliability1
 from utilities import create_gif
 
 data = pandas.read_csv(os.path.join('data', 'aggregated1.csv'))
@@ -58,6 +58,18 @@ tikzplotlib.save(os.path.join('figures', 'reliability1.tex'))
 plt.savefig(os.path.join('figures', 'reliability1.png'), bbox_inches='tight')
 plot_reliability1(m, v1s, v2s)
 plt.savefig(os.path.join('figures', 'reliability2.png'), bbox_inches='tight')
+
+
+
+for (year1, year2) in zip((2019, 2019), (2020, 2021)):
+    conf_size = compute_sd(data, year1, year2, n_aggr_max, instagram, month1=6, month2=10, alpha=0.05)
+    conf_size = np.array(conf_size).T
+
+    dict = {'aggrv': range(1,len(conf_size[0])+1), 'm6': conf_size[0], 'm7': conf_size[1], 'm8': conf_size[2], 'm9': conf_size[3], 'm10': conf_size[4]}
+    df = pandas.DataFrame(dict)
+    df.to_csv(os.path.join('figures', 'confidence_%s_%s.csv' % (year1, year2)), index=False)
+
+
 
 dict = {'v1': v1s, 'IoU': [np.min(m[i:,i:]) for i in range(len(v1s))]}
 df = pandas.DataFrame(dict)
