@@ -151,7 +151,7 @@ def plot_sd0(t, res, ymax=None, legend=None, title=None, return_fig=False, **kwa
     
     plt.xlabel('Aggregation days')
     plt.ylabel('Confidence interval size')
-    plt.legend(legend)
+    plt.legend(legend, loc='upper right')
     plt.title(title)
     
     if return_fig:        
