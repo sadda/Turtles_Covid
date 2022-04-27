@@ -211,10 +211,13 @@ def plot_reliability(v1s, v2s, p1, p2, **kwargs):
     plot_reliability0(m, v1s, v2s, **kwargs)
 
 
-def plot_reliability0(m, v1s, v2s, xlabel='v1', ylabel='v2', return_fig=False, title=None, **kwargs):
-    fig = plt.figure(facecolor=(1, 1, 1))
+def plot_reliability0(m, v1s, v2s, xlabel='v1', ylabel='v2', return_fig=False, title=None, boundaries=np.linspace(0,1,11), **kwargs):
+    m = np.minimum(m, np.max(boundaries))
+    m = np.maximum(m, np.min(boundaries))
+
+    fig = plt.figure(facecolor=(1, 1, 1))    
     plt.imshow(np.flipud(m), cmap=plt.cm.RdBu, extent=(min(v1s)-1, max(v1s), min(v2s)-1, max(v2s)))
-    plt.colorbar(boundaries=np.linspace(0,1,11)) 
+    plt.colorbar(boundaries=boundaries) 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
