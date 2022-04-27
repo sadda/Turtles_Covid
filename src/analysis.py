@@ -133,7 +133,7 @@ def compute_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, r
 def plot_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, **kwargs):
     res = compute_sd(data, year1, year2, n_aggr_max, instagram, month1=month1, month2=month2, **kwargs)
 
-    legend = kwargs.pop('legend', Aggregate.month_names[range(month1, month2+1)])
+    legend = kwargs.pop('legend', Aggregate.month_names[range(month1-1, month2)])
     return plot_sd0(range(1, n_aggr_max+1), np.array(res), legend=legend, **kwargs)
 
 
