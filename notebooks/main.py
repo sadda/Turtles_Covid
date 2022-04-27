@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import tikzplotlib
 from analysis import plot_confidence, compute_sd, plot_sd, plot_k, compute_ious, plot_reliability0, plot_reliability1, get_entries, prepare_data
 from utilities import create_gif
+from confidence import confidence_ours
+from aggregate import Aggregate
 
 
 ## Load data
@@ -93,6 +95,61 @@ plot_reliability1(m, v1s, v2s)
 plt.savefig(os.path.join('figures', 'reliability2.png'), bbox_inches='tight')
 
 
+## Save to csv reliability data
+dict = {'v1': v1s, 'IoU': [np.min(m[i:,i:]) for i in range(len(v1s))]}
+df = pandas.DataFrame(dict)
+df.to_csv(os.path.join('figures', 'reliability2.csv'), index=False)
+
+
+##
+month1 = 6
+month2 = 9
+x_max = 200
+cs = ['yellow', 'blue', 'black']
+
+v1s = np.arange(1, 201, 1)
+v2s = np.arange(1, 201, 1)
+
+p1 = p2 = 1e-4
+m2 = np.zeros((len(v1s), len(v2s)))
+for (i, v1) in enumerate(v1s):
+    for (j, v2) in enumerate(v2s):
+        _, lb1, ub1 = confidence_ours(v1, v2, p1, p2)
+        m2[i,j] = np.sqrt(ub1 / lb1)
+
+for (year1, year2) in zip((2019, 2019), (2020, 2021)):    
+    plot_reliability0(m2, v1s, v2s,
+        xlabel='$\mathrm{v}_{\mathrm{detected}}^{%d}$' % year1,
+        ylabel='$\mathrm{v}_{\mathrm{detected}}^{%d}$' % year2,
+        title='confidence interval width',
+        boundaries=np.linspace(1,3,11)
+    )
+
+    plt.plot([0, x_max], [5, 5], c='black', linestyle='dashed')
+    plt.plot([5, 5], [0, x_max], c='black', linestyle='dashed')
+
+    for i, n_aggr in enumerate([1, 7, 15]):
+        entries, arrivals, years, months = get_entries(data, **kwargs)
+
+        x1 = entries[(years == year1) * (months >= month1) * (months <= month2)]
+        x2 = entries[(years == year2) * (months >= month1) * (months <= month2)]
+
+        aggregate = Aggregate(month1, month2, n_aggr, **kwargs)
+        x1 = aggregate.split(x1)
+        x2 = aggregate.split(x2)
+        if n_aggr == 1:
+            label_name = '1 day'
+        else:
+            label_name = str(n_aggr) + ' days'
+        plt.scatter(x1, x2, c=cs[i], label=label_name)
+
+    plt.xlim([0, x_max])
+    plt.ylim([0, x_max])
+    plt.legend()
+    tikzplotlib.save(os.path.join('figures', 'width_%d_%d.tex' % (year1, year2)))
+    plt.savefig(os.path.join('figures', 'width_%d_%d.png' % (year1, year2)), bbox_inches='tight')
+
+
 ## Save to csv confidence intervals width 
 for (year1, year2) in zip((2019, 2019), (2020, 2021)):
     conf_size = compute_sd(data, year1, year2, 30, instagram,
@@ -106,12 +163,6 @@ for (year1, year2) in zip((2019, 2019), (2020, 2021)):
     dict = {'aggrv': range(1,len(conf_size[0])+1), 'm6': conf_size[0], 'm7': conf_size[1], 'm8': conf_size[2], 'm9': conf_size[3], 'm10': conf_size[4]}
     df = pandas.DataFrame(dict)
     df.to_csv(os.path.join('figures', 'confidence_%s_%s.csv' % (year1, year2)), index=False)
-
-
-## Save to csv reliability data
-dict = {'v1': v1s, 'IoU': [np.min(m[i:,i:]) for i in range(len(v1s))]}
-df = pandas.DataFrame(dict)
-df.to_csv(os.path.join('figures', 'reliability2.csv'), index=False)
 
 
 ## Save to csv confidence intervals
