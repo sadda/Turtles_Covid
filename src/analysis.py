@@ -122,10 +122,10 @@ def compute_sd(data, year1, year2, n_aggr_max, instagram, month1=5, month2=10, r
         res_month = []
         for month in range(month1, month2+1):
             with np.errstate(divide='ignore'):
-                qwe = np.sqrt(c2 / c1)
-            asd = qwe[aggregate.months == month]
-            asd[asd == np.inf] = rat_max
-            res_month.append(np.mean(asd))
+                ci_width = np.sqrt(c2 / c1)
+            ci_width_month = ci_width[aggregate.months == month]
+            ci_width_month[ci_width_month == np.inf] = rat_max
+            res_month.append(np.mean(ci_width_month))
         res.append(res_month)
 
     return res
