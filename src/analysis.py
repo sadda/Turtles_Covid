@@ -26,16 +26,23 @@ def prepare_data(entries, years, year1, year2, months, month1, month2, n_aggr, i
     return c0, c1, c2, t
 
 
-def get_entries(data, place=None, **kwargs):
-    if place is None:
+def get_entries(data, where_entries=None, where_arrivals=None, **kwargs):
+    if where_entries is None:
         entries = data.total.values
-    elif place == "boat":
+    elif where_entries == "boat":
         entries = data.boat.values
-    elif place == "underwater":
+    elif where_entries == "underwater":
         entries = data.underwater.values
     else:
-        raise(Exception('place should be None, boat or underwater'))
-    arrivals = data.arr_total.values
+        raise(Exception('where_entries should be None, boat or underwater'))
+    if where_arrivals is None:
+        arrivals = data.arr_total.values
+    elif where_arrivals == "airport":
+        arrivals = data.arr_airport.values
+    elif where_arrivals == "port":
+        arrivals = data.arr_port.values
+    else:
+        raise(Exception('where_arrivals should be None, airport or port'))
     years = data.year.values
     months = data.month.values
     return entries, arrivals, years, months
