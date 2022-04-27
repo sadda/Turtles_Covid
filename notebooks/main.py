@@ -101,7 +101,7 @@ df = pandas.DataFrame(dict)
 df.to_csv(os.path.join('figures', 'reliability2.csv'), index=False)
 
 
-##
+## Plot the width figure
 month1 = 6
 month2 = 9
 x_max = 200
@@ -121,7 +121,7 @@ for (year1, year2) in zip((2019, 2019), (2020, 2021)):
     plot_reliability0(m2, v1s, v2s,
         xlabel='$\mathrm{v}_{\mathrm{detected}}^{%d}$' % year1,
         ylabel='$\mathrm{v}_{\mathrm{detected}}^{%d}$' % year2,
-        title='confidence interval width',
+        title='Confidence interval width',
         boundaries=np.linspace(1,3,11)
     )
 
@@ -166,21 +166,30 @@ for (year1, year2) in zip((2019, 2019), (2020, 2021)):
 
 
 ## Save to csv confidence intervals
+kwargs_airport = {
+    'where_entries': kwargs['where_entries'],
+    'where_arrivals': 'airport',
+}
 ignore_shorter=True
 for (year1, year2) in zip((2019, 2019), (2020, 2021)):
     for n_aggr in (1, 7, 15, 184):
         for box_shape in (True, False):
-            entries, arrivals, years, months = get_entries(data, **kwargs)
-            c0, c1, c2, t = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, instagram, ignore_shorter=ignore_shorter, box_shape=box_shape)
-            c0_no_inst, _, _, _ = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, None, ignore_shorter=ignore_shorter, box_shape=box_shape)
-            c3, _, _, _ = prepare_data(arrivals, years, year1, year2, months, min(months), max(months), n_aggr, None, ignore_shorter=ignore_shorter, box_shape=box_shape)
+            for i, kwargs0 in enumerate((kwargs, kwargs_airport)):
+                entries, arrivals, years, months = get_entries(data, **kwargs0)
+                c0, c1, c2, t = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, instagram, ignore_shorter=ignore_shorter, box_shape=box_shape)
+                c0_no_inst, _, _, _ = prepare_data(entries, years, year1, year2, months, min(months), max(months), n_aggr, None, ignore_shorter=ignore_shorter, box_shape=box_shape)
+                c3, _, _, _ = prepare_data(arrivals, years, year1, year2, months, min(months), max(months), n_aggr, None, ignore_shorter=ignore_shorter, box_shape=box_shape)
 
-            df = pandas.DataFrame({'x': t, 'photos_lo': c1, 'photos_up': c2, 'photos_point': c0,
-                'arrivals_exact': c3,
-                'photos1': np.full(len(t), np.nan),
-                'photos2': np.full(len(t), np.nan),
-                'photos_point_initial': c0_no_inst})
+                df = pandas.DataFrame({'x': t, 'photos_lo': c1, 'photos_up': c2, 'photos_point': c0,
+                    'arrivals_exact': c3,
+                    'photos1': np.full(len(t), np.nan),
+                    'photos2': np.full(len(t), np.nan),
+                    'photos_point_initial': c0_no_inst})
 
-            file_name = "Ratio_%d_%d_%s_%02d_%s.csv" % (year2,year1,kwargs['where_entries'],n_aggr,box_shape)
-            df.to_csv(file_name, index=None)
+                if i == 0:
+                    name_add = ''
+                else:
+                    name_add = '_airport'
+                file_name = "Ratio_%d_%d_%s_%02d_%s%s.csv" % (year2,year1,kwargs['where_entries'],n_aggr,box_shape,name_add)
+                df.to_csv(file_name, index=None)
 
