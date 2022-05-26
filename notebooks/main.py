@@ -104,11 +104,12 @@ df.to_csv(os.path.join('figures', 'reliability2.csv'), index=False)
 ## Plot the width figure
 month1 = 6
 month2 = 9
-x_max = 200
+x_max = 250
+y_max = 200
 cs = ['yellow', 'blue', 'black']
 
-v1s = np.arange(1, 201, 1)
-v2s = np.arange(1, 201, 1)
+v1s = np.arange(1, x_max+1, 1)
+v2s = np.arange(1, y_max+1, 1)
 
 p1 = p2 = 1e-4
 m2 = np.zeros((len(v1s), len(v2s)))
@@ -126,7 +127,7 @@ for (year1, year2) in zip((2019, 2019), (2020, 2021)):
     )
 
     plt.plot([0, x_max], [5, 5], c='black', linestyle='dashed')
-    plt.plot([5, 5], [0, x_max], c='black', linestyle='dashed')
+    plt.plot([5, 5], [0, y_max], c='black', linestyle='dashed')
 
     for i, n_aggr in enumerate([1, 7, 15]):
         entries, arrivals, years, months = get_entries(data, **kwargs)
@@ -144,7 +145,7 @@ for (year1, year2) in zip((2019, 2019), (2020, 2021)):
         plt.scatter(x1, x2, c=cs[i], label=label_name)
 
     plt.xlim([0, x_max])
-    plt.ylim([0, x_max])
+    plt.ylim([0, y_max])
     plt.legend()
     tikzplotlib.save(os.path.join('figures', 'width_%d_%d.tex' % (year1, year2)))
     plt.savefig(os.path.join('figures', 'width_%d_%d.png' % (year1, year2)), bbox_inches='tight')
