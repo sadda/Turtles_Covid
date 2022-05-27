@@ -77,7 +77,15 @@ def plot_confidence(data, year1, year2, n_aggr, instagram, plot_raw=False, plot_
         )
 
 
-def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=True, title=None, xmax=None, ymax=None, xticks_offset=0, **kwargs):
+def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=True,
+        title=None,
+        xmax=None,
+        ymax=None,
+        xticks_offset=0,
+        add_legend=True,
+        ylabel=None,
+        **kwargs
+):
     fig = plt.figure(facecolor=(1, 1, 1))
     ax = fig.add_subplot(111)
     plt.plot(t, c0, label='Ratio entries after Instagram')
@@ -93,7 +101,8 @@ def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=Tr
         plt.ylim(0, ymax)
     plt.xlim(1, xmax)
     plt.title(title)
-    plt.legend(loc='upper right')
+    if add_legend:
+        plt.legend(loc='upper right')
 
     plt.hlines(1, 1, xmax, linestyles='dotted')
     
@@ -101,7 +110,8 @@ def plot_confidence0(t, c0, c1, c2, c0_raw=None, t3=None, c3=None, return_fig=Tr
     ax.set_xticks(months)
     ax.set_xticklabels(['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'])
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=90) 
-
+    plt.ylabel(ylabel)
+    
     if xticks_offset != 0:
         offset = matplotlib.transforms.ScaledTranslation(xticks_offset, 00, fig.dpi_scale_trans)
         for label in ax.xaxis.get_majorticklabels():
@@ -173,7 +183,16 @@ def plot_k(v1s, v2s, p1, p2, **kwargs):
     return plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, **kwargs)
 
 
-def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, ymin=None, ymax=None, xscale=None, return_fig=False, title=None, **kwargs):
+def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2,
+        xlabel='DETECTED viewing pressure v1',
+        ylabel='Ratio of REAL viewing pressures v2/v1',
+        ymin=None,
+        ymax=None,
+        xscale=None,
+        return_fig=False,
+        title=None,
+        **kwargs
+):
     fig = plt.figure(facecolor=(1, 1, 1))
     plot_between(v1s, lb1, ub1, color='blue', alpha=0.2)
     plot_between(v1s, lb2, ub2, color='red', alpha=0.2)
@@ -181,8 +200,8 @@ def plot_k0(m1, m2, v1s, lb1, lb2, ub1, ub2, ymin=None, ymax=None, xscale=None, 
     plt.plot(v1s, m2, color='black', linestyle='dotted')    
 
     plt.legend(('Point estimate ours', 'Point estimate true', 'Confidence interval ours', 'Confidence interval true'))
-    plt.xlabel('DETECTED viewing pressure v1')
-    plt.ylabel('Ratio of REAL viewing pressures v2/v1')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.title(title)
 
     if xscale == 'log':
