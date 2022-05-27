@@ -5,11 +5,11 @@ This repo contains supplementary material to the [paper](https://www.biorxiv.org
  
 ## Summary
 
-The paper quantifies *real viewing pressure*, which we define as the number of encounters between an animal and a human. Since this quantity is impossible to observe, we estimate it based on the *observed viewing pressure*, which we define as number of entries upload on a social media (Instagram) with appropriate hashtags. Our method does not estimate the precise value but the ratio in two periods(such as subsequent years).
+The paper quantifies *real viewing pressure*, which we define as the number of encounters between an animal and a human. Since this quantity is impossible to observe, we estimate it based on the *observed viewing pressure*, which we define as number of entries uploaded on a social media (Instagram) with appropriate hashtags. Our method does not estimate the precise value but the ratio in two periods (such as subsequent years).
 
 ## Usage
 
-We assume the user to obtain `v1` and `v2` the observed viewing pressure in two periods. To compute the ratio of the observed viewing pressures, we call function `compute_confidence`.
+We assume the user to obtain the observed viewing pressures `v1` and `v2`  in the two investigated periods. To compute the ratio of the real viewing pressures, we call function `compute_confidence`.
 
 ```
 import sys
@@ -22,7 +22,7 @@ v2 = np.arange(1, 101)
 point, lb, ub = compute_confidence(v1, v2)
 ```
 
-The following code plots the point estimate and its confidence interval. Since `v1` equals to `v2` by its definition, the point estimate is 1. The size of the confidence interval decreases with the number of observations. This makes sense as more data implies a more reliable model.
+The following code plots the point estimate and its confidence interval. Since `v1` equals to `v2` by its definition, the point estimate is always 1. The size of the confidence interval decreases with the increasing number of observations. This makes sense as more data imply a more reliable model.
 
 ```
 import matplotlib.pyplot as plt
