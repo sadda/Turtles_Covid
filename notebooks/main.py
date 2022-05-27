@@ -36,7 +36,9 @@ fun = lambda i: plot_confidence(data, year1, year2, i, instagram,
     box_shape = box_shape,
     plot_raw = plot_raw,
     plot_arr = plot_arr,
+    add_legend = False,
     return_fig = True,
+    ylabel = '$\mathrm{v}_{\mathrm{real}}^{%d}/\mathrm{v}_{\mathrm{real}}^{%d}$' % (year2, year1),    
     **kwargs
 )
 file_name = os.path.join('figures', 'aggr.gif')
@@ -64,7 +66,9 @@ fun = lambda rat: plot_k(v1s, v1s*rat, 1e-4, 1e-4,
     ymin = 0,
     ymax = 2,
     xscale='log',
-    title='Ratio of DETECTED viewing pressures v2/v1 = ' + str(rat),
+    title='$\mathrm{v}_{\mathrm{detected}}^2/\mathrm{v}_{\mathrm{detected}}^1 = ' + str(rat) + '$',
+    xlabel='$\mathrm{v}_{\mathrm{detected}}^1$',
+    ylabel='$\mathrm{v}_{\mathrm{real}}^2/\mathrm{v}_{\mathrm{real}}^1$',
     return_fig=True
 )
 file_name = os.path.join('figures', 'confidence1.gif')
@@ -77,7 +81,9 @@ fun = lambda v2: plot_k(v1s, v2*np.ones(v1s.shape), 1e-4, 1e-4,
     ymin = 0,
     ymax = 2,
     xscale='log',
-    title='DETECTED viewing pressure v2 = ' + str(v2),
+    title='$\mathrm{v}_{\mathrm{detected}}^2 = ' + str(v2) + '$',
+    xlabel='$\mathrm{v}_{\mathrm{detected}}^1$',
+    ylabel='$\mathrm{v}_{\mathrm{real}}^2/\mathrm{v}_{\mathrm{real}}^1$',
     return_fig=True
 )
 file_name = os.path.join('figures', 'confidence2.gif')

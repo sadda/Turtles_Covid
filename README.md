@@ -1,19 +1,53 @@
-# Turtles_Covid
+# A social media-based framework for quantifying temporal changes to wildlife viewing intensity
  
-Interactive graphs are available at [Binder](https://mybinder.org/v2/gh/sadda/Turtles_Covid/HEAD?labpath=notebooks%2Fexample.ipynb) (loading may take few seconds).
+This repo contains supplementary material to the [paper](https://www.biorxiv.org/content/10.1101/2022.05.19.492636) "A social media-based framework for quantifying temporal changes to wildlife viewing intensity: Case study of sea turtles before and during COVID-19". Interactive graphs are available at [Binder](https://mybinder.org/v2/gh/sadda/Turtles_Covid/HEAD?labpath=notebooks%2Fexample.ipynb) (loading may take few seconds).
+
+ 
+## Summary
+
+The paper quantifies *real viewing pressure*, which we define as the number of encounters between an animal and a human. Since this quantity is impossible to observe, we estimate it based on the *observed viewing pressure*, which we define as number of entries upload on a social media (Instagram) with appropriate hashtags. Our method does not estimate the precise value but the ratio in two periods(such as subsequent years).
+
+## Usage
+
+We assume the user to obtain `v1` and `v2` the observed viewing pressure in two periods. To compute the ratio of the observed viewing pressures, we call function `compute_confidence`.
+
+```
+import sys
+sys.path.insert(0, '../src')
+import numpy as np
+from confidence import compute_confidence
+
+v1 = np.arange(1, 101)
+v2 = np.arange(1, 101)
+point, lb, ub = compute_confidence(v1, v2)
+```
+
+The following code plots the point estimate and its confidence interval. Since `v1` equals to `v2` by its definition, the point estimate is 1. The size of the confidence interval decreases with the number of observations. This makes sense as more data implies a more reliable model.
+
+```
+import matplotlib.pyplot as plt
+
+plt.plot(v1, point, label='Point estimate')
+plt.plot(v1, lb, color="grey", alpha=0.2, label='_nolegend_')
+plt.plot(v1, ub, color="grey", alpha=0.2, label='_nolegend_')
+plt.fill_between(v1, lb, ub, color="grey", alpha=0.2, label='Confidence interval')
+plt.xlim(1, 100)
+plt.ylim(0, 3)
+plt.xlabel('$\mathrm{v}_{\mathrm{detected}}^{1} = \mathrm{v}_{\mathrm{detected}}^{2}$')
+plt.ylabel('Ratio of real viewing pressure')
+plt.legend()
+```
+
+![](figures/confidence.png)
+
+
+## Additional interactive plots
 
 Our results depend on the number of detected entries (denoted by detected viewing pressure). When we consider these entries daily, there is usually a small number of them, which leads to large uncertainty. The users may therefore to make predictions over aggregated windows (such as weekly or even monthly).
 
 The following animation shows the aggregation window size influences the width of the confidence interval. When we consider daily entries (the size of the aggregation window is one), the estimated ratio of the real viewing pressure is often above one (which would mean that there was higher real viewing pressure in 2020 than in 2019). However, in all these cases, the confidence interval is large (and therefore the uncertainty in results is large). However, when we increase the size of the aggregation window, the number of entries in each window increases and the confidence interval becomes more reliable (its width is small).
 
 ![](figures/aggr.gif)
-
-
-
-
-The following animation complements the previous one. We fix the size of the aggregation window and discretize each month into aggregation windows (for example, when the aggegation window is 4 days, a month with 30 days is split into 7 aggregation windows and 2 days are ignored). For each month we then compute the average width of the confidence interval. It is not surprising that the summer months (with a large number of entries) have smaller average width. At the same time, the width decreases with increasing size of the aggregation window. The animation showsthe dependence on the allowed level of error alpha (usually considered as 1 or 5 per cent). When the allowed error increases, the the width of the confidence interval decreases.
-
-![](figures/alpha.gif)
 
 
 
