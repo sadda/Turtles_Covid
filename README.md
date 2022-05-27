@@ -1,6 +1,6 @@
 # A social media-based framework for quantifying temporal changes to wildlife viewing intensity
  
-This repo contains supplementary material to the [paper](https://www.biorxiv.org/content/10.1101/2022.05.19.492636) "A social media-based framework for quantifying temporal changes to wildlife viewing intensity: Case study of sea turtles before and during COVID-19". Interactive graphs are available at [Binder](https://mybinder.org/v2/gh/sadda/Turtles_Covid/HEAD?labpath=notebooks%2Fexample.ipynb) (loading may take few seconds).
+This repo contains supplementary material to the [paper](https://www.biorxiv.org/content/10.1101/2022.05.19.492636) "A social media-based framework for quantifying temporal changes to wildlife viewing intensity: Case study of sea turtles before and during COVID-19". Interactive graphs are available at [Binder](https://mybinder.org/v2/gh/sadda/Turtles_Covid/HEAD?labpath=notebooks%2Fexample.ipynb) (loading may take few seconds). For our further work (or contact information) check our [webpage](http://kostaspapafitsoros.weebly.com/sea-turtles.html).
 
  
 ## Summary
